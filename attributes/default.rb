@@ -1,6 +1,6 @@
 
-default["railsbox"]["ruby"]["versions"] = %w(2.0.0-p247)
-default["railsbox"]["ruby"]["global_version"] = "2.0.0-p247"
+default["railsbox"]["ruby"]["versions"] = %w(2.1.0)
+default["railsbox"]["ruby"]["global_version"] = "2.1.0"
 default["railsbox"]["upstream_start_port"]["unicorn"] = 10001
 
 default["railsbox"]["default_config"]["nginx"]["template_name"] = "nginx_vhost.conf.erb"
