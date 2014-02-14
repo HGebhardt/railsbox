@@ -9,6 +9,7 @@
 
 include_recipe "rbenv::default"
 include_recipe "rbenv::ruby_build"
+include_recipe "rbenv::rbenv_vars"
 
 node["railsbox"]["ruby"]["versions"].each do |rb_version|
 
