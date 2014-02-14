@@ -8,12 +8,31 @@
 # Copyright (C) 2013 zhiping Limited
 # 
 
-root_password = node["railsbox"]["db_root_password"]
-if root_password
-  Chef::Log.info %(Set node["postgresql"]["password"]["postgres"] attributes to node["railsbox"]["db_root_password"])
-  node.set["postgresql"]["password"]["postgres"] = root_password
-end
+if node["postgresql"]["enable_pgdg_apt"]
+  node.set["postgresql"]['dir'] = "/etc/postgresql/#{node["postgresql"]["version"]}/main"
+  node.set["postgresql"]['config'] = {
+    'data_directory' => "/var/lib/postgresql/#{node["postgresql"]["version"]}/main",
+    'hba_file' => "/etc/postgresql/#{node["postgresql"]["version"]}/main/pg_hba.conf",
+    'ident_file' => "/etc/postgresql/#{node["postgresql"]["version"]}/main/pg_ident.conf",
+    'external_pid_file' => "/var/run/postgresql/#{node["postgresql"]["version"]}-main.pid",
+    'ssl_key_file' => "/etc/ssl/private/ssl-cert-snakeoil.key",
+    'ssl_cert_file' => "/etc/ssl/certs/ssl-cert-snakeoil.pem"
+  }
+  node.set["postgresql"]['client'] = {
+    'packages' => ["postgresql-client-#{node["postgresql"]["version"]}"]
+  }
+  node.set["postgresql"]['server'] = {
+    'packages' => [
+      "postgresql-#{node["postgresql"]["version"]}",
+      "postgresql-server-dev-#{node["postgresql"]["version"]}"
+    ]
+  }
+  node.set["postgresql"]['contrib'] = {
+    'packages' => ["postgresql-contrib-#{node["postgresql"]["version"]}"]
+  }
 
+  include_recipe "postgresql::apt_pgdg_postgresql"
+end
 include_recipe "postgresql::client"
 include_recipe "postgresql::server"
 include_recipe "database::postgresql"
